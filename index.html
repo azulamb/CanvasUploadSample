@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <title>Canvaw upload sample</title>
     <script>
-function upload() {
-	var canvas = document.getElementById( 'canvas' );
+
+function upload_( canvas ) {
 	var image = canvas.toDataURL();
 
 	var http = new XMLHttpRequest();
@@ -26,6 +26,23 @@ function upload() {
 
 };
 
+function upload() {
+	upload_( document.getElementById( 'canvas' ) );
+};
+
+function uploadpart() {
+	var canvas = document.getElementById( 'canvas' );
+	var img = new Image();
+	img.onload = function()
+	{
+		var newcanvas = document.getElementById( 'newcanvas' );
+		var context = newcanvas.getContext( '2d' );
+		context.drawImage( img, 20, 20, 150, 150, 0, 0, 150, 150 );
+		upload_( newcanvas );
+	}
+	img.src = canvas.toDataURL();
+};
+
 window.onload = function (ev)
 {
 	var canvas = document.getElementById( 'canvas' );
@@ -35,11 +52,15 @@ window.onload = function (ev)
 
 	var button = document.getElementById( 'upload' );
 	button.onclick = upload;
+	button = document.getElementById( 'uploadpart' );
+	button.onclick = uploadpart;
 }
 	</script>
 </head>
 <body>
 	<canvas id="canvas" width="300" height="300"></canvas>
 	<input type="button" value="Upoad" id="upload" />
+	<input type="button" value="Upoad(part)" id="uploadpart" />
+	<canvas id="newcanvas" width="150" height="150" style="visibility:hidden;"></canvas>
 </body>
 </html>
