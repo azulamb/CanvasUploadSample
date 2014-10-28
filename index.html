@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <title>Canvaw upload sample</title>
+    <script>
+function upload() {
+	var canvas = document.getElementById( 'canvas' );
+	var image = canvas.toDataURL();
+
+	var http = new XMLHttpRequest();
+	http.open( 'POST', './upload.cgi' );
+	http.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
+	http.onreadystatechange = function ()
+	{
+		if ( http.readyState != 4 || http.status != 200 ) { return; }
+		var data = JSON.parse(http.responseText);
+		if ( data.code !== '0' )
+		{
+			alert("Failure");
+			return;
+		}
+		alert("Success");
+	};
+	http.send( 'img=' + encodeURIComponent( image ) );
+
+};
+
+window.onload = function (ev)
+{
+	var canvas = document.getElementById( 'canvas' );
+	var context = canvas.getContext( '2d' );
+	context.fillStyle = 'red';
+	context.fillRect( 50, 50, 200, 200 );
+
+	var button = document.getElementById( 'upload' );
+	button.onclick = upload;
+}
+	</script>
+</head>
+<body>
+	<canvas id="canvas" width="300" height="300"></canvas>
+	<input type="button" value="Upoad" id="upload" />
+</body>
+</html>
